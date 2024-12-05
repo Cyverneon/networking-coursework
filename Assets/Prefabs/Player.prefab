@@ -169,9 +169,9 @@ MonoBehaviour:
   speed: 6
   accel: 4
   airAccel: 1
-  jumpHeight: 13
+  jumpHeight: 14
   gravity: 1
-  terminalVelocity: 10
+  terminalVelocity: 12
   jumpLeniency: 0.1
   groundAngle: 30
   collisionLayerMask:
