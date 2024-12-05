@@ -7,43 +7,58 @@ using System;
 
 public class PlayerMovement : NetworkBehaviour
 {
-    [Header("Movement")]
+    [Header("Speed")]
     [Tooltip("Player speed in units per second")]
     [SerializeField] private float speed = 2f;
     [Tooltip("Rate of acceleration in units*speed per second (i.e, if speed is 4, accel of 1 will accelerate at 4 units per second)")]
     [SerializeField] private float accel = 1f;
     [Tooltip("Rate of acceleration in the air")]
     [SerializeField] private float airAccel = 0.5f;
+
+    [Header("Jumping")]
     [Tooltip("Jump height in units")]
     [SerializeField] private float jumpHeight = 50f;
+    [Tooltip("Time in seconds player can press jump while about to hit the ground and still jump")]
+    [SerializeField] private float jumpLeniency = 0.1f;
+    [Tooltip("Layers which player can jump off if they are detected to stand on")]
+    [SerializeField] private LayerMask groundCollisionLayers;
+
+    [Header("Gravity")]
     [Tooltip("Force of gravity in units")]
     [SerializeField] private float gravity = 9.8f;
     [Tooltip("Maximum falling speed")]
     [SerializeField] private float terminalVelocity = 50f;
-    [Tooltip("Time in seconds player can press jump while about to hit the ground and still jump")]
-    [SerializeField] private float jumpLeniency = 0.1f;
-
-    [Tooltip("Varience from upwards angle that is still considered \"ground\" (can jump off) ")]
-    [SerializeField] private float groundAngle = 30;
-
-    [SerializeField] private LayerMask collisionLayerMask;
 
     [Header("Controls")]
     [SerializeField] private KeyCode keyLeft = KeyCode.A;
     [SerializeField] private KeyCode keyRight = KeyCode.D;
     [SerializeField] private KeyCode keyJump = KeyCode.J;
 
+    private Rigidbody2D rigidbody2d;
+    private Collider2D collider2d;
+
+    private Vector3 velocity = new Vector3(0f, 0f, 0f);
+
+    private Vector3 feetOffsetLeft = new Vector3(0f, 0f, 0f);
+    private Vector3 feetOffsetRight = new Vector3(0f, 0f, 0f);
+
     private float jumpTimer = 0f;
     private bool cueJump = false;
     private bool onGround = true;
 
-    [Header("References")]
-    [SerializeField] private Collider2D collider2d;
-    [SerializeField] private Rigidbody2D rigidBody;
+    private void Start()
+    {
+        rigidbody2d = GetComponent<Rigidbody2D>();
+        collider2d = GetComponent<Collider2D>();
 
-    private Vector2 velocity = new Vector2(0f, 0f);
+        feetOffsetLeft.y = -(collider2d.bounds.extents.y);
+        feetOffsetLeft.x = -(collider2d.bounds.extents.x) + 0.05f;
 
-    private void checkJumpInput()
+        feetOffsetRight.y = -(collider2d.bounds.extents.y);
+        feetOffsetRight.x = (collider2d.bounds.extents.x) - 0.05f;
+    }
+
+    private void CheckJumpInput()
     {
         if (Input.GetKeyDown(keyJump))
         {
@@ -60,9 +75,54 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
-    private void Movement(float delta)
+    private bool CheckOnGround()
     {
-        onGround = collider2d.IsTouchingLayers(collisionLayerMask);
+        RaycastHit2D hitLeft = Physics2D.Raycast(transform.position + feetOffsetLeft, -Vector2.up, 0.1f, groundCollisionLayers);
+        Debug.DrawRay(transform.position + feetOffsetLeft, -Vector2.up, Color.red, 0.1f);
+        RaycastHit2D hitRight = Physics2D.Raycast(transform.position + feetOffsetRight, -Vector2.up, 0.1f, groundCollisionLayers);
+        Debug.DrawRay(transform.position + feetOffsetRight, -Vector2.up, Color.red, 0.1f);
+
+        return (hitLeft || hitRight);
+    }
+
+    private void Move(float delta)
+    {
+        ContactFilter2D contactFilter = new ContactFilter2D();
+        contactFilter.layerMask = groundCollisionLayers;
+        List<RaycastHit2D> collisionsList = new List<RaycastHit2D>();
+        
+        int collisionCount = rigidbody2d.Cast(velocity.normalized, contactFilter, collisionsList, (velocity * delta).magnitude);
+        if (collisionCount > 0)
+        {
+            Vector2 newVelocity = new Vector2(velocity.x, 0f);
+            collisionCount = rigidbody2d.Cast(newVelocity.normalized, contactFilter, collisionsList, (newVelocity * delta).magnitude);
+            if (collisionCount == 0)
+            {
+                velocity = newVelocity;
+            }
+            else
+            {
+                newVelocity = new Vector2(0f, velocity.y);
+                collisionCount = rigidbody2d.Cast(newVelocity.normalized, contactFilter, collisionsList, (newVelocity * delta).magnitude);
+                if (collisionCount == 0)
+                {
+                    velocity = newVelocity;
+                }
+                else
+                {
+                    velocity.x = 0f;
+                    velocity.y = 0f;
+                }
+            }
+        }
+
+        rigidbody2d.MovePosition(transform.position + (velocity * delta));
+    }
+
+    private void CalculateVelocity(float delta)
+    {
+        CheckOnGround();
+        onGround = CheckOnGround();
 
         float acceleration = onGround ? accel*speed*delta : airAccel*speed*delta;
 
@@ -100,38 +160,23 @@ public class PlayerMovement : NetworkBehaviour
             }
         }
 
-        transform.position += new Vector3(velocity.x, velocity.y, 0f) * delta;
-
-
-        /*        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up, 200.0f, layerMask);
-                if (hit)
-                {
-                    Debug.Log("raycast hit");
-                }
-                else
-                {
-                    Debug.Log("raycast not hit");
-                }*/
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        Debug.Log("Collision entered");
+        Move(delta);
     }
 
     private void FixedUpdate()
     {
         if (IsOwner)
         {
-            Movement(Time.deltaTime);
+            CalculateVelocity(Time.fixedDeltaTime);
         }
+
     }
 
     private void Update()
     {
         if (IsOwner)
         {
-            checkJumpInput();
+            CheckJumpInput();
         }
     }
 }
