@@ -29,15 +29,17 @@ public class PlayerMovement : NetworkBehaviour
     [Tooltip("Maximum falling speed")]
     [SerializeField] private float terminalVelocity = 50f;
 
+    [SerializeField] private Rigidbody2D.SlideMovement slideMovement;
+
     [Header("Controls")]
     [SerializeField] private KeyCode keyLeft = KeyCode.A;
     [SerializeField] private KeyCode keyRight = KeyCode.D;
     [SerializeField] private KeyCode keyJump = KeyCode.J;
 
     private Rigidbody2D rigidbody2d;
-    private Collider2D collider2d;
+    private BoxCollider2D collider2d;
 
-    private Vector3 velocity = new Vector3(0f, 0f, 0f);
+    private Vector2 velocity = new Vector2(0f, 0f);
 
     private Vector3 feetOffsetLeft = new Vector3(0f, 0f, 0f);
     private Vector3 feetOffsetRight = new Vector3(0f, 0f, 0f);
@@ -49,13 +51,14 @@ public class PlayerMovement : NetworkBehaviour
     private void Start()
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
-        collider2d = GetComponent<Collider2D>();
+        collider2d = GetComponent<BoxCollider2D>();
 
         feetOffsetLeft.y = -(collider2d.bounds.extents.y);
         feetOffsetLeft.x = -(collider2d.bounds.extents.x) + 0.05f;
 
         feetOffsetRight.y = -(collider2d.bounds.extents.y);
         feetOffsetRight.x = (collider2d.bounds.extents.x) - 0.05f;
+
     }
 
     private void CheckJumpInput()
@@ -78,45 +81,11 @@ public class PlayerMovement : NetworkBehaviour
     private bool CheckOnGround()
     {
         RaycastHit2D hitLeft = Physics2D.Raycast(transform.position + feetOffsetLeft, -Vector2.up, 0.1f, groundCollisionLayers);
-        Debug.DrawRay(transform.position + feetOffsetLeft, -Vector2.up, Color.red, 0.1f);
         RaycastHit2D hitRight = Physics2D.Raycast(transform.position + feetOffsetRight, -Vector2.up, 0.1f, groundCollisionLayers);
-        Debug.DrawRay(transform.position + feetOffsetRight, -Vector2.up, Color.red, 0.1f);
+        //Debug.DrawRay(transform.position + feetOffsetLeft, -Vector2.up, Color.red, 0.1f);
+        //Debug.DrawRay(transform.position + feetOffsetRight, -Vector2.up, Color.red, 0.1f);
 
         return (hitLeft || hitRight);
-    }
-
-    private void Move(float delta)
-    {
-        ContactFilter2D contactFilter = new ContactFilter2D();
-        contactFilter.layerMask = groundCollisionLayers;
-        List<RaycastHit2D> collisionsList = new List<RaycastHit2D>();
-        
-        int collisionCount = rigidbody2d.Cast(velocity.normalized, contactFilter, collisionsList, (velocity * delta).magnitude);
-        if (collisionCount > 0)
-        {
-            Vector2 newVelocity = new Vector2(velocity.x, 0f);
-            collisionCount = rigidbody2d.Cast(newVelocity.normalized, contactFilter, collisionsList, (newVelocity * delta).magnitude);
-            if (collisionCount == 0)
-            {
-                velocity = newVelocity;
-            }
-            else
-            {
-                newVelocity = new Vector2(0f, velocity.y);
-                collisionCount = rigidbody2d.Cast(newVelocity.normalized, contactFilter, collisionsList, (newVelocity * delta).magnitude);
-                if (collisionCount == 0)
-                {
-                    velocity = newVelocity;
-                }
-                else
-                {
-                    velocity.x = 0f;
-                    velocity.y = 0f;
-                }
-            }
-        }
-
-        rigidbody2d.MovePosition(transform.position + (velocity * delta));
     }
 
     private void CalculateVelocity(float delta)
@@ -160,7 +129,10 @@ public class PlayerMovement : NetworkBehaviour
             }
         }
 
-        Move(delta);
+        //Vector2 targetMovement = CollideAndSlide(velocity * delta, transform.position, 0);
+        //rigidbody2d.MovePosition(transform.position + new Vector3(targetMovement.x, targetMovement.y, 0f));
+        rigidbody2d.Slide(velocity, delta, slideMovement);
+
     }
 
     private void FixedUpdate()
