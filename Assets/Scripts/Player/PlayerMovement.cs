@@ -1,87 +1,84 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Unity.Netcode;
-using Unity.VisualScripting;
 using System;
+using Unity.Netcode;
+using UnityEngine;
 
 public class PlayerMovement : NetworkBehaviour
 {
     [Header("Speed")]
     [Tooltip("Player speed in units per second")]
-    [SerializeField] private float speed = 2f;
+    [SerializeField] private float _speed = 2f;
     [Tooltip("Rate of acceleration in units*speed per second (i.e, if speed is 4, accel of 1 will accelerate at 4 units per second)")]
-    [SerializeField] private float accel = 1f;
+    [SerializeField] private float _accel = 1f;
     [Tooltip("Rate of acceleration in the air")]
-    [SerializeField] private float airAccel = 0.5f;
+    [SerializeField] private float _airAccel = 0.5f;
 
     [Header("Jumping")]
     [Tooltip("Jump height in units")]
-    [SerializeField] private float jumpHeight = 50f;
+    [SerializeField] private float _jumpHeight = 50f;
     [Tooltip("Time in seconds player can press jump while about to hit the ground and still jump")]
-    [SerializeField] private float jumpLeniency = 0.1f;
+    [SerializeField] private float _jumpBuffer = 0.1f;
     [Tooltip("Layers which player can jump off if they are detected to stand on")]
-    [SerializeField] private LayerMask groundCollisionLayers;
+    [SerializeField] private LayerMask _collisionLayers;
 
     [Header("Gravity")]
     [Tooltip("Force of gravity in units")]
-    [SerializeField] private float gravity = 9.8f;
+    [SerializeField] private float _gravity = 9.8f;
     [Tooltip("Maximum falling speed")]
-    [SerializeField] private float terminalVelocity = 50f;
+    [SerializeField] private float _terminalVelocity = 50f;
 
-    [SerializeField] private Rigidbody2D.SlideMovement slideMovement;
+    [SerializeField] private Rigidbody2D.SlideMovement _slideMovement;
 
     [Header("Controls")]
-    [SerializeField] private KeyCode keyLeft = KeyCode.A;
-    [SerializeField] private KeyCode keyRight = KeyCode.D;
-    [SerializeField] private KeyCode keyJump = KeyCode.J;
+    [SerializeField] private KeyCode _keyLeft = KeyCode.A;
+    [SerializeField] private KeyCode _keyRight = KeyCode.D;
+    [SerializeField] private KeyCode _keyJump = KeyCode.J;
 
-    private Rigidbody2D rigidbody2d;
-    private BoxCollider2D collider2d;
+    private Rigidbody2D _rigidbody2d;
+    private BoxCollider2D _collider2d;
 
-    private Vector2 velocity = new Vector2(0f, 0f);
+    private Vector2 _velocity = new Vector2(0f, 0f);
 
-    private Vector3 feetOffsetLeft = new Vector3(0f, 0f, 0f);
-    private Vector3 feetOffsetRight = new Vector3(0f, 0f, 0f);
+    private Vector3 _feetOffsetLeft = new Vector3(0f, 0f, 0f);
+    private Vector3 _feetOffsetRight = new Vector3(0f, 0f, 0f);
 
-    private float jumpTimer = 0f;
-    private bool cueJump = false;
-    private bool onGround = true;
+    private float _jumpTimer = 0f;
+    private bool _cuedJump = false;
+    private bool _onGround = true;
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
-        rigidbody2d = GetComponent<Rigidbody2D>();
-        collider2d = GetComponent<BoxCollider2D>();
+        _rigidbody2d = GetComponent<Rigidbody2D>();
+        _collider2d = GetComponent<BoxCollider2D>();
 
-        feetOffsetLeft.y = -(collider2d.bounds.extents.y);
-        feetOffsetLeft.x = -(collider2d.bounds.extents.x) + 0.05f;
+        _feetOffsetLeft.y = -(_collider2d.bounds.extents.y);
+        _feetOffsetLeft.x = -(_collider2d.bounds.extents.x) + 0.05f;
 
-        feetOffsetRight.y = -(collider2d.bounds.extents.y);
-        feetOffsetRight.x = (collider2d.bounds.extents.x) - 0.05f;
+        _feetOffsetRight.y = -(_collider2d.bounds.extents.y);
+        _feetOffsetRight.x = (_collider2d.bounds.extents.x) - 0.05f;
 
     }
 
     private void CheckJumpInput()
     {
-        if (Input.GetKeyDown(keyJump))
+        if (Input.GetKeyDown(_keyJump))
         {
-            cueJump = true;
-            jumpTimer = jumpLeniency;
+            _cuedJump = true;
+            _jumpTimer = _jumpBuffer;
         }
-        if (jumpTimer > 0)
+        if (_jumpTimer > 0)
         {
-            jumpTimer -= Time.deltaTime;
-            if (jumpTimer < 0)
+            _jumpTimer -= Time.deltaTime;
+            if (_jumpTimer < 0)
             {
-                cueJump = false;
+                _cuedJump = false;
             }
         }
     }
 
     private bool CheckOnGround()
     {
-        RaycastHit2D hitLeft = Physics2D.Raycast(transform.position + feetOffsetLeft, -Vector2.up, 0.1f, groundCollisionLayers);
-        RaycastHit2D hitRight = Physics2D.Raycast(transform.position + feetOffsetRight, -Vector2.up, 0.1f, groundCollisionLayers);
+        RaycastHit2D hitLeft = Physics2D.Raycast(transform.position + _feetOffsetLeft, -Vector2.up, 0.1f, _collisionLayers);
+        RaycastHit2D hitRight = Physics2D.Raycast(transform.position + _feetOffsetRight, -Vector2.up, 0.1f, _collisionLayers);
         //Debug.DrawRay(transform.position + feetOffsetLeft, -Vector2.up, Color.red, 0.1f);
         //Debug.DrawRay(transform.position + feetOffsetRight, -Vector2.up, Color.red, 0.1f);
 
@@ -91,47 +88,47 @@ public class PlayerMovement : NetworkBehaviour
     private void CalculateVelocity(float delta)
     {
         CheckOnGround();
-        onGround = CheckOnGround();
+        _onGround = CheckOnGround();
 
-        float acceleration = onGround ? accel*speed*delta : airAccel*speed*delta;
+        float acceleration = _onGround ? _accel*_speed*delta : _airAccel*_speed*delta;
 
-        if (Input.GetKey(keyLeft) ^ Input.GetKey(keyRight))
+        if (Input.GetKey(_keyLeft) ^ Input.GetKey(_keyRight))
         {
-            if (Input.GetKey(keyLeft))
+            if (Input.GetKey(_keyLeft))
             {
-                velocity.x = Mathf.Lerp(velocity.x, -speed, acceleration);
+                _velocity.x = Mathf.Lerp(_velocity.x, -_speed, acceleration);
             }
-            if (Input.GetKey(keyRight))
+            if (Input.GetKey(_keyRight))
             {
-                velocity.x = Mathf.Lerp(velocity.x, speed, acceleration);
+                _velocity.x = Mathf.Lerp(_velocity.x, _speed, acceleration);
             }
         }
         else
         {
-            velocity.x = Mathf.Lerp(velocity.x, 0, acceleration);
+            _velocity.x = Mathf.Lerp(_velocity.x, 0, acceleration);
         }
 
-        if (onGround)
+        if (_onGround)
         {
-            velocity.y = 0f;
+            _velocity.y = 0f;
         }
         else
         {
-            velocity.y -= gravity;
-            velocity.y = Math.Max(velocity.y, -terminalVelocity);
+            _velocity.y -= _gravity;
+            _velocity.y = Math.Max(_velocity.y, -_terminalVelocity);
         }
 
-        if (cueJump)
+        if (_cuedJump)
         {
-            if (onGround)
+            if (_onGround)
             {
-                velocity.y = jumpHeight;
+                _velocity.y = _jumpHeight;
             }
         }
 
         //Vector2 targetMovement = CollideAndSlide(velocity * delta, transform.position, 0);
         //rigidbody2d.MovePosition(transform.position + new Vector3(targetMovement.x, targetMovement.y, 0f));
-        rigidbody2d.Slide(velocity, delta, slideMovement);
+        _rigidbody2d.Slide(_velocity, delta, _slideMovement);
 
     }
 

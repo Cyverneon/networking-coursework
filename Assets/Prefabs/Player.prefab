@@ -170,17 +170,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0b3d72a1ee618d4e9291771b5c068ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 6
-  accel: 4
-  airAccel: 1
-  jumpHeight: 14
-  jumpLeniency: 0.1
-  groundCollisionLayers:
+  _speed: 6
+  _accel: 4
+  _airAccel: 1
+  _jumpHeight: 14
+  _jumpBuffer: 0.1
+  _collisionLayers:
     serializedVersion: 2
-    m_Bits: 64
-  gravity: 1
-  terminalVelocity: 12
-  slideMovement:
+    m_Bits: 119
+  _gravity: 1
+  _terminalVelocity: 12
+  _slideMovement:
     <maxIterations>k__BackingField: 5
     <surfaceSlideAngle>k__BackingField: 90
     <gravitySlipAngle>k__BackingField: 90
@@ -197,9 +197,9 @@ MonoBehaviour:
     <useNoMove>k__BackingField: 0
     <useSimulationMove>k__BackingField: 0
     <useAttachedTriggers>k__BackingField: 0
-  keyLeft: 97
-  keyRight: 100
-  keyJump: 32
+  _keyLeft: 97
+  _keyRight: 100
+  _keyJump: 32
 --- !u!114 &5660340125466764864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -212,7 +212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae39cb7db3cbdeb4f8a1eed8cba8ce36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseUnreliableDeltas: 0
+  UseUnreliableDeltas: 1
   SyncPositionX: 1
   SyncPositionY: 1
   SyncPositionZ: 0
