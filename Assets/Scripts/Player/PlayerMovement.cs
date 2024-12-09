@@ -35,6 +35,7 @@ public class PlayerMovement : NetworkBehaviour
 
     private Rigidbody2D _rigidbody2d;
     private BoxCollider2D _collider2d;
+    private Animator _animator;
 
     private Vector2 _velocity = new Vector2(0f, 0f);
 
@@ -49,6 +50,7 @@ public class PlayerMovement : NetworkBehaviour
     {
         _rigidbody2d = GetComponent<Rigidbody2D>();
         _collider2d = GetComponent<BoxCollider2D>();
+        _animator = GetComponent<Animator>();
 
         _feetOffsetLeft.y = -(_collider2d.bounds.extents.y);
         _feetOffsetLeft.x = -(_collider2d.bounds.extents.x) + 0.05f;
@@ -56,6 +58,14 @@ public class PlayerMovement : NetworkBehaviour
         _feetOffsetRight.y = -(_collider2d.bounds.extents.y);
         _feetOffsetRight.x = (_collider2d.bounds.extents.x) - 0.05f;
 
+    }
+
+    private void UpdateAnimatorParams()
+    {
+        _animator.SetBool("grounded", CheckOnGround());
+        _animator.SetFloat("velocityX", _velocity.x);
+        Debug.Log(_velocity.x);
+        _animator.SetFloat("velocityY", _velocity.y);
     }
 
     private void CheckJumpInput()
@@ -126,8 +136,6 @@ public class PlayerMovement : NetworkBehaviour
             }
         }
 
-        //Vector2 targetMovement = CollideAndSlide(velocity * delta, transform.position, 0);
-        //rigidbody2d.MovePosition(transform.position + new Vector3(targetMovement.x, targetMovement.y, 0f));
         _rigidbody2d.Slide(_velocity, delta, _slideMovement);
 
     }
@@ -146,6 +154,7 @@ public class PlayerMovement : NetworkBehaviour
         if (IsOwner)
         {
             CheckJumpInput();
+            UpdateAnimatorParams();
         }
     }
 }
