@@ -130,7 +130,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      outlinePuzzle_0: 679463615989250274
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

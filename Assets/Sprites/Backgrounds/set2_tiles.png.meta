@@ -802,7 +802,36 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      set2_tiles_0: -2971925997496666058
+      set2_tiles_1: -8563324380848621225
+      set2_tiles_10: 7751705088198667396
+      set2_tiles_11: -4039862480051378219
+      set2_tiles_12: -8776744464770202203
+      set2_tiles_13: -1971360615757541994
+      set2_tiles_14: 4934324028648071383
+      set2_tiles_15: -7979964472459094885
+      set2_tiles_16: 6400689729672229801
+      set2_tiles_17: 7939680935951583755
+      set2_tiles_18: -5247462795245372148
+      set2_tiles_19: -1535988190326385011
+      set2_tiles_2: -8212454378473172686
+      set2_tiles_20: -5532325153821709109
+      set2_tiles_21: -3216125338326238216
+      set2_tiles_22: 6793604456312124484
+      set2_tiles_23: -3372972537940769879
+      set2_tiles_24: 6171740343088423046
+      set2_tiles_25: 4378497368752888259
+      set2_tiles_26: -7184322322910593801
+      set2_tiles_27: -8360611309417864241
+      set2_tiles_28: -4414938414292373982
+      set2_tiles_3: -6992106901842778218
+      set2_tiles_4: 7713786662555015441
+      set2_tiles_5: -3861111441701228872
+      set2_tiles_6: 907865275470004524
+      set2_tiles_7: -6778224039318233091
+      set2_tiles_8: 6707425428968260916
+      set2_tiles_9: -6938987789214647026
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

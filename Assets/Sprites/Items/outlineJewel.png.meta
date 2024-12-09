@@ -130,7 +130,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      outlineJewel_0: -5506985001118352940
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

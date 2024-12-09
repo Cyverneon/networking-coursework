@@ -130,7 +130,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      yellowJewel_0: 2509021091246346841
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -130,7 +130,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      playerGreen_hit_0: 5426954231042267973
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

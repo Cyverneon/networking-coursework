@@ -130,7 +130,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      plantThorns_vertical_0: -7442411212148325718
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

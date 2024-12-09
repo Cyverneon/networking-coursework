@@ -130,7 +130,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      puzzleGreen_0: -6419717071076410455
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

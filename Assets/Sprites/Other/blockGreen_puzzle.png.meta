@@ -130,7 +130,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      blockGreen_puzzle_0: 387177009766519399
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

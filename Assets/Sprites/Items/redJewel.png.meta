@@ -130,7 +130,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      redJewel_0: -482950905647337162
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

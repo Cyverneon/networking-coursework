@@ -130,7 +130,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      fluidBlue_top_0: 3534758023548810734
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -130,7 +130,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      playerRed_up3_0: 8008310128107188416
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

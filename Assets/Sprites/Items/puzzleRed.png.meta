@@ -130,7 +130,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      puzzleRed_0: 1147165347052457688
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

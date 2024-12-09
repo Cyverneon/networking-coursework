@@ -250,7 +250,13 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      set4_hills_0: -8411006139856419874
+      set4_hills_1: 3791138511869389260
+      set4_hills_2: -6320074068946238959
+      set4_hills_3: -3386686169595219780
+      set4_hills_4: 2287783691870107125
+      set4_hills_5: -7263345490620680556
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

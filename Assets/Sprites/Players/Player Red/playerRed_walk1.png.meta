@@ -130,7 +130,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      playerRed_walk1_0: -1078136255711748623
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -130,7 +130,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      playerBlue_swim1_0: 2140244335476469843
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

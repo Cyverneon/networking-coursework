@@ -130,7 +130,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -795,14 +795,43 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      set1_tiles_0: 3287237883860892888
+      set1_tiles_1: 4811892747531065017
+      set1_tiles_10: -5407560805631166318
+      set1_tiles_11: -2978003723250942292
+      set1_tiles_12: 3305968467189778096
+      set1_tiles_13: -2897622975940319158
+      set1_tiles_14: -1778411227583728893
+      set1_tiles_15: 2743437497247819155
+      set1_tiles_16: -492253052660238195
+      set1_tiles_17: 5344889389259834895
+      set1_tiles_18: 4256815379587059052
+      set1_tiles_19: 654234687553671512
+      set1_tiles_2: 263775202183525544
+      set1_tiles_20: -1166427008034317071
+      set1_tiles_21: -366227041146889953
+      set1_tiles_22: 6841080296692013142
+      set1_tiles_23: 3217294676197011320
+      set1_tiles_24: -4203765902887984780
+      set1_tiles_25: -5141745637744779135
+      set1_tiles_26: -1642603826692774307
+      set1_tiles_27: -8840919881034273111
+      set1_tiles_28: 6610795921399456402
+      set1_tiles_3: 1768353996377259739
+      set1_tiles_4: -7952186446457822521
+      set1_tiles_5: 8216868999145192203
+      set1_tiles_6: 5270002418711838295
+      set1_tiles_7: 823251378138080294
+      set1_tiles_8: -8213932754763839948
+      set1_tiles_9: 6521989505821789448
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -130,7 +130,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      blueJewel_0: 5398534550012081184
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
