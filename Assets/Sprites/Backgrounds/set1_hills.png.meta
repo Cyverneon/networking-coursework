@@ -118,10 +118,10 @@ TextureImporter:
       name: set1_hills_0
       rect:
         serializedVersion: 2
-        x: 31
+        x: 95
         y: 0
-        width: 29
-        height: 188
+        width: 83
+        height: 562
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -139,10 +139,10 @@ TextureImporter:
       name: set1_hills_1
       rect:
         serializedVersion: 2
-        x: 229
+        x: 688
         y: 0
-        width: 29
-        height: 276
+        width: 84
+        height: 824
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -160,10 +160,10 @@ TextureImporter:
       name: set1_hills_2
       rect:
         serializedVersion: 2
-        x: 262
+        x: 787
         y: 0
-        width: 29
-        height: 230
+        width: 84
+        height: 688
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -181,10 +181,10 @@ TextureImporter:
       name: set1_hills_3
       rect:
         serializedVersion: 2
-        x: 381
+        x: 1144
         y: 0
-        width: 29
-        height: 164
+        width: 84
+        height: 490
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -202,10 +202,10 @@ TextureImporter:
       name: set1_hills_4
       rect:
         serializedVersion: 2
-        x: 422
+        x: 1267
         y: 0
-        width: 29
-        height: 234
+        width: 84
+        height: 700
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -223,10 +223,10 @@ TextureImporter:
       name: set1_hills_5
       rect:
         serializedVersion: 2
-        x: 562
+        x: 1687
         y: 0
-        width: 29
-        height: 184
+        width: 84
+        height: 550
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
