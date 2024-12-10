@@ -63,7 +63,6 @@ public class PlayerMovement : NetworkBehaviour
     private void UpdateAnimatorParams()
     {
         _animator.SetBool("playerGrounded", CheckOnGround());
-        Debug.Log(CheckOnGround());
         _animator.SetFloat("velocityX", _velocity.x);
         _animator.SetFloat("velocityY", _velocity.y);
     }
