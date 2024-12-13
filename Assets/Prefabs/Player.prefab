@@ -175,7 +175,7 @@ MonoBehaviour:
   _speed: 6
   _accel: 4
   _airAccel: 1
-  _jumpHeight: 14
+  _jumpHeight: 15
   _jumpBuffer: 0.1
   _collisionLayers:
     serializedVersion: 2
