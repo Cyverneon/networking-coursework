@@ -162,10 +162,14 @@ public class PlayerMovement : NetworkBehaviour
         }
 
         Rigidbody2D.SlideResults slideResults = _rigidbody2d.Slide(_velocity, delta, _slideMovement);
-        if (slideResults.slideHit)
-        {
-            _velocity -= (Vector2.Dot(_velocity, slideResults.slideHit.normal) * slideResults.slideHit.normal);
-        }
+
+        if (slideResults.position.x == transform.position.x)
+            _velocity.x = 0;
+
+        if (slideResults.position.y == transform.position.y)
+            _velocity.y = 0;
+
+        transform.position = slideResults.position;
     }
 
     private void FixedUpdate()

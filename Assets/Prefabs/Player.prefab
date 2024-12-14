@@ -197,7 +197,7 @@ MonoBehaviour:
       m_Bits: 119
     <useLayerMask>k__BackingField: 1
     <useStartPosition>k__BackingField: 0
-    <useNoMove>k__BackingField: 0
+    <useNoMove>k__BackingField: 1
     <useSimulationMove>k__BackingField: 0
     <useAttachedTriggers>k__BackingField: 0
   _keyLeft: 97
