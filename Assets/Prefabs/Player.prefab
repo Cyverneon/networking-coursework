@@ -180,6 +180,7 @@ MonoBehaviour:
   _collisionLayers:
     serializedVersion: 2
     m_Bits: 119
+  _jumpApex: 0.04
   _gravity: 1
   _terminalVelocity: 12
   _slideMovement:

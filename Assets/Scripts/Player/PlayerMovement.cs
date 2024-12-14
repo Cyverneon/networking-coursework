@@ -1,4 +1,5 @@
 using System;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -19,6 +20,8 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private float _jumpBuffer = 0.1f;
     [Tooltip("Layers which player can jump off if they are detected to stand on")]
     [SerializeField] private LayerMask _collisionLayers;
+    [Tooltip("sdkfaskldfhj")]
+    [SerializeField] private float _jumpApex = 0.1f;
 
     [Header("Gravity")]
     [Tooltip("Force of gravity in units")]
@@ -43,21 +46,32 @@ public class PlayerMovement : NetworkBehaviour
     private Vector3 _feetOffsetRight = new Vector3(0f, 0f, 0f);
 
     private float _jumpTimer = 0f;
+    private float _jumpApexTimer = 0f;
     private bool _cuedJump = false;
     private bool _onGround = true;
+    private bool _jumping = false;
+    private bool _appliedJumpApex = false;
 
     public override void OnNetworkSpawn()
+    {
+        GetComponentRefs();
+        GetFeetOffset();
+    }
+
+    private void GetComponentRefs()
     {
         _rigidbody2d = GetComponent<Rigidbody2D>();
         _collider2d = GetComponent<BoxCollider2D>();
         _animator = GetComponent<Animator>();
+    }
 
+    private void GetFeetOffset()
+    {
         _feetOffsetLeft.y = -(_collider2d.bounds.extents.y);
         _feetOffsetLeft.x = -(_collider2d.bounds.extents.x) + 0.05f;
 
         _feetOffsetRight.y = -(_collider2d.bounds.extents.y);
         _feetOffsetRight.x = (_collider2d.bounds.extents.x) - 0.05f;
-
     }
 
     private void UpdateAnimatorParams()
@@ -117,26 +131,41 @@ public class PlayerMovement : NetworkBehaviour
             _velocity.x = Mathf.Lerp(_velocity.x, 0, acceleration);
         }
 
+        _velocity.y -= _gravity;
+        _velocity.y = Math.Max(_velocity.y, -_terminalVelocity);
+
         if (_onGround)
         {
-            _velocity.y = 0f;
-        }
-        else
-        {
-            _velocity.y -= _gravity;
-            _velocity.y = Math.Max(_velocity.y, -_terminalVelocity);
-        }
-
-        if (_cuedJump)
-        {
-            if (_onGround)
+            _jumping = false;
+            if (_cuedJump)
             {
+                _jumping = true;
+                _appliedJumpApex = false;
                 _velocity.y = _jumpHeight;
             }
         }
+        if (_jumping && _velocity.y <= 0)
+        {
+            if (!_appliedJumpApex)
+            {
+                _jumpApexTimer = _jumpApex;
+                _appliedJumpApex = true;
+            }
+            else
+            {
+                _jumpApexTimer -= delta;
+                if (_jumpApexTimer >= 0)
+                {
+                    _velocity.y = 0;
+                }
+            }
+        }
 
-        _rigidbody2d.Slide(_velocity, delta, _slideMovement);
-
+        Rigidbody2D.SlideResults slideResults = _rigidbody2d.Slide(_velocity, delta, _slideMovement);
+        if (slideResults.slideHit)
+        {
+            _velocity -= (Vector2.Dot(_velocity, slideResults.slideHit.normal) * slideResults.slideHit.normal);
+        }
     }
 
     private void FixedUpdate()
