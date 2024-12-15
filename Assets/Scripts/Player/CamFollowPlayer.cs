@@ -6,14 +6,12 @@ using UnityEngine.Tilemaps;
 
 public class CamFollowPlayer : MonoBehaviour
 {
+    [SerializeField] private float _speed;
+    [SerializeField] private Tilemap _tilemap;
+
     private GameObject _player;
     private Vector3 _targetPos;
-
     private Rect _constraints;
-
-    [SerializeField] private float _speed;
-
-    [SerializeField] private Tilemap _tilemap;
 
     private void getConstraints()
     {
@@ -36,11 +34,14 @@ public class CamFollowPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_player.transform.position.x >= _constraints.xMin && _player.transform.position.x <= _constraints.xMax)
-            _targetPos.x = _player.transform.position.x;
-        if (_player.transform.position.y >= _constraints.yMin && _player.transform.position.y <= _constraints.yMax)
-            _targetPos.y = _player.transform.position.y;
+        if (_player != null)
+        {
+            if (_player.transform.position.x >= _constraints.xMin && _player.transform.position.x <= _constraints.xMax)
+                _targetPos.x = _player.transform.position.x;
+            if (_player.transform.position.y >= _constraints.yMin && _player.transform.position.y <= _constraints.yMax)
+                _targetPos.y = _player.transform.position.y;
 
-        transform.position = Vector3.Lerp(transform.position, _targetPos, _speed * Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, _targetPos, _speed * Time.deltaTime);
+        }
     }
 }
