@@ -207,6 +207,12 @@ public class PlayerMovement : NetworkBehaviour
         if (slideResults.position.y == transform.position.y)
             _velocity.y = 0;
 
+        if (slideResults.slideHit.normal == -_upDirection)
+        {
+            _appliedJumpApex = true;
+            _jumpApexTimer = 0;
+        }
+
         transform.position = slideResults.position;
     }
 
