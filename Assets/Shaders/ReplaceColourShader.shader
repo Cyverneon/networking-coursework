@@ -67,7 +67,9 @@ Shader "Sprites/ReplaceColourShader"
                 fixed4 col = tex2D(_MainTex, i.uv);
                 if (col.r > 0.5 && col.g < 0.5 && col.b < 0.5)
                 {
-                    col.rbg = _Color;
+                    col.r = _Color.r;
+                    col.g = _Color.g;
+                    col.b = _Color.b;
                 }
                 return col;
             }

@@ -81,10 +81,10 @@ public class PlayerMovement : NetworkBehaviour
     private void GetFeetOffset()
     {
         _feetOffsetLeft.y = -(_collider2d.bounds.extents.y);
-        _feetOffsetLeft.x = -(_collider2d.bounds.extents.x) + 0.05f;
+        _feetOffsetLeft.x = -(_collider2d.bounds.extents.x);
 
         _feetOffsetRight.y = -(_collider2d.bounds.extents.y);
-        _feetOffsetRight.x = (_collider2d.bounds.extents.x) - 0.05f;
+        _feetOffsetRight.x = (_collider2d.bounds.extents.x);
     }
 
     private void SetSlideMovement()
