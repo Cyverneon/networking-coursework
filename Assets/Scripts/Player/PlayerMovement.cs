@@ -18,8 +18,6 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private float _jumpHeight = 50f;
     [Tooltip("Time in seconds player can press jump while about to hit the ground and still jump")]
     [SerializeField] private float _jumpBuffer = 0.1f;
-    [Tooltip("Layers which player can jump off if they are detected to stand on")]
-    [SerializeField] private LayerMask _collisionLayers;
     [Tooltip("Period of time at peak of player's jump where they will 'hover' for a second")]
     [SerializeField] private float _jumpApex = 0.1f;
     [Tooltip("Period of time after leaving the ground which the player can still jump")]
@@ -31,7 +29,15 @@ public class PlayerMovement : NetworkBehaviour
     [Tooltip("Maximum falling speed")]
     [SerializeField] private float _terminalVelocity = 50f;
 
-    [SerializeField] private Rigidbody2D.SlideMovement _slideMovement;
+    [Header("Slide Movement & Collision")]
+    [Tooltip("Maximum amount of iterations for Rigidbody2D.Slide() to do when handling collisions")]
+    [SerializeField] private int _slideIterations = 5;
+    [Tooltip("Maximum angle for a surface to be slid along")]
+    [SerializeField] private float _surfaceSlideAngle = 90f;
+    [Tooltip("Up direction")]
+    [SerializeField] private Vector2 _upDirection = new Vector2(0, 1);
+    [Tooltip("Layers which the player will collide with")]
+    [SerializeField] private LayerMask _collisionLayers;
 
     [Header("Controls")]
     [SerializeField] private KeyCode _keyLeft = KeyCode.A;
@@ -42,6 +48,8 @@ public class PlayerMovement : NetworkBehaviour
     private BoxCollider2D _collider2d;
     private Animator _animator;
 
+    private Rigidbody2D.SlideMovement _slideMovement;
+
     private Vector2 _velocity = new Vector2(0f, 0f);
 
     private Vector3 _feetOffsetLeft = new Vector3(0f, 0f, 0f);
@@ -50,6 +58,7 @@ public class PlayerMovement : NetworkBehaviour
     private float _jumpTimer = 0f;
     private float _jumpApexTimer = 0f;
     private float _coyoteTimer = 0f;
+
     private bool _cuedJump = false;
     private bool _onGround = true;
     private bool _jumping = false;
@@ -59,6 +68,7 @@ public class PlayerMovement : NetworkBehaviour
     {
         GetComponentRefs();
         GetFeetOffset();
+        SetSlideMovement();
     }
 
     private void GetComponentRefs()
@@ -75,6 +85,24 @@ public class PlayerMovement : NetworkBehaviour
 
         _feetOffsetRight.y = -(_collider2d.bounds.extents.y);
         _feetOffsetRight.x = (_collider2d.bounds.extents.x) - 0.05f;
+    }
+
+    private void SetSlideMovement()
+    {
+        _slideMovement.maxIterations = _slideIterations;
+        _slideMovement.surfaceSlideAngle = _surfaceSlideAngle;
+        _slideMovement.gravitySlipAngle = 0f;
+        _slideMovement.surfaceUp = _upDirection;
+        _slideMovement.surfaceAnchor = Vector2.zero;
+        _slideMovement.gravity = Vector2.zero;
+        _slideMovement.startPosition = Vector2.zero;
+        _slideMovement.selectedCollider = _collider2d;
+        _slideMovement.layerMask = _collisionLayers;
+        _slideMovement.useLayerMask = true;
+        _slideMovement.useStartPosition = false;
+        _slideMovement.useNoMove = true;
+        _slideMovement.useSimulationMove = false;
+        _slideMovement.useAttachedTriggers = false;
     }
 
     private void UpdateAnimatorParams()
