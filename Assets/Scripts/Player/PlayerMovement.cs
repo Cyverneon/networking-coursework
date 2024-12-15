@@ -20,8 +20,10 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private float _jumpBuffer = 0.1f;
     [Tooltip("Layers which player can jump off if they are detected to stand on")]
     [SerializeField] private LayerMask _collisionLayers;
-    [Tooltip("sdkfaskldfhj")]
+    [Tooltip("Period of time at peak of player's jump where they will 'hover' for a second")]
     [SerializeField] private float _jumpApex = 0.1f;
+    [Tooltip("Period of time after leaving the ground which the player can still jump")]
+    [SerializeField] private float _coyoteTime = 0.1f;
 
     [Header("Gravity")]
     [Tooltip("Force of gravity in units")]
@@ -47,6 +49,7 @@ public class PlayerMovement : NetworkBehaviour
 
     private float _jumpTimer = 0f;
     private float _jumpApexTimer = 0f;
+    private float _coyoteTimer = 0f;
     private bool _cuedJump = false;
     private bool _onGround = true;
     private bool _jumping = false;
@@ -131,18 +134,25 @@ public class PlayerMovement : NetworkBehaviour
             _velocity.x = Mathf.Lerp(_velocity.x, 0, acceleration);
         }
 
-        _velocity.y -= _gravity;
+        _velocity.y -= (_jumping && _velocity.y >= 0 && !Input.GetKey(_keyJump)) ? _gravity*2 : _gravity;
         _velocity.y = Math.Max(_velocity.y, -_terminalVelocity);
 
         if (_onGround)
         {
             _jumping = false;
-            if (_cuedJump)
-            {
-                _jumping = true;
-                _appliedJumpApex = false;
-                _velocity.y = _jumpHeight;
-            }
+            _coyoteTimer = _coyoteTime;
+            
+        }
+        else if (_coyoteTimer >= 0)
+        {
+            _coyoteTimer -= Time.deltaTime;
+        }
+        if (_cuedJump && (_onGround || _coyoteTimer >= 0))
+        {
+            _jumping = true;
+            _coyoteTimer = 0;
+            _appliedJumpApex = false;
+            _velocity.y = _jumpHeight;
         }
         if (_jumping && _velocity.y <= 0)
         {
