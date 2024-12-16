@@ -3163,6 +3163,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 616574943646205742, guid: 5ae17a661ad3deb40bc9cfcda6e719b9, type: 3}
+      propertyPath: _speed
+      value: 180
+      objectReference: {fileID: 0}
     - target: {fileID: 710729414131554101, guid: 5ae17a661ad3deb40bc9cfcda6e719b9, type: 3}
       propertyPath: m_Name
       value: EnemyFly
