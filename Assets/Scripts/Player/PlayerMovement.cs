@@ -64,6 +64,8 @@ public class PlayerMovement : NetworkBehaviour
     private bool _jumping = false;
     private bool _appliedJumpApex = false;
 
+    public Vector2 _additionalVel = Vector2.zero;
+
     public override void OnNetworkSpawn()
     {
         GetComponentRefs();
@@ -93,7 +95,7 @@ public class PlayerMovement : NetworkBehaviour
         _slideMovement.surfaceSlideAngle = _surfaceSlideAngle;
         _slideMovement.gravitySlipAngle = 0f;
         _slideMovement.surfaceUp = _upDirection;
-        _slideMovement.surfaceAnchor = Vector2.zero;
+        _slideMovement.surfaceAnchor = new Vector2(0, -0.1f);
         _slideMovement.gravity = Vector2.zero;
         _slideMovement.startPosition = Vector2.zero;
         _slideMovement.selectedCollider = _collider2d;
@@ -167,13 +169,14 @@ public class PlayerMovement : NetworkBehaviour
 
         if (_onGround)
         {
+            _velocity.y = 0;
             _jumping = false;
             _coyoteTimer = _coyoteTime;
             
         }
         else if (_coyoteTimer >= 0)
         {
-            _coyoteTimer -= Time.deltaTime;
+            _coyoteTimer -= delta;
         }
         if (_cuedJump && (_onGround || _coyoteTimer >= 0))
         {
@@ -214,6 +217,15 @@ public class PlayerMovement : NetworkBehaviour
         }
 
         transform.position = slideResults.position;
+
+        UpdatePosAdditionalVel();
+    }
+
+    private void UpdatePosAdditionalVel()
+    {
+        Debug.Log(_additionalVel);
+        transform.position += new Vector3(_additionalVel.x, _additionalVel.y, transform.position.z) * Time.deltaTime;
+
     }
 
     private void FixedUpdate()
@@ -222,7 +234,6 @@ public class PlayerMovement : NetworkBehaviour
         {
             CalculateVelocity(Time.fixedDeltaTime);
         }
-
     }
 
     private void Update()

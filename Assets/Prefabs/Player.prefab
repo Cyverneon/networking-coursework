@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &351696980484631284
 RectTransform:
   m_ObjectHideFlags: 0
@@ -193,6 +193,7 @@ MonoBehaviour:
   _keyLeft: 97
   _keyRight: 100
   _keyJump: 32
+  _additionalVel: {x: 0, y: 0}
 --- !u!50 &4894158572332116486
 Rigidbody2D:
   serializedVersion: 4

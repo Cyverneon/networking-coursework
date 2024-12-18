@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class MoveCircle : MonoBehaviour
+public class MoveCircle : Mover
 {
     [Tooltip("Speed of movement in degrees per second")]
     [SerializeField] private float _speed = 180f;
@@ -17,7 +17,7 @@ public class MoveCircle : MonoBehaviour
     private float _currentAngle = 0f;
     private float _currentAngleRad = 0f;
 
-    Vector3 GetNextPos()
+    override protected Vector3 GetNextPos()
     {
         _currentAngle += (_clockwise ? _speed : -_speed) * Time.deltaTime;
         _currentAngle = _currentAngle % 360;
@@ -28,10 +28,5 @@ public class MoveCircle : MonoBehaviour
         newPos.x = _orbitPos.x + (Mathf.Sin(_currentAngleRad) * _radius);
         newPos.y = _orbitPos.y + (Mathf.Cos(_currentAngleRad) * _radius);
         return newPos;
-    }
-
-    void Update()
-    {
-        transform.position = GetNextPos();
     }
 }
