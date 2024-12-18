@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using TMPro;
 
 
 public class PlayerEffects : NetworkBehaviour
@@ -14,6 +15,7 @@ public class PlayerEffects : NetworkBehaviour
 
     private PlayerMovement _playerMovement;
     private AudioSource _audioSource;
+    private TextMeshProUGUI _healthText;
 
     private bool _isWalking;
 
@@ -60,10 +62,17 @@ public class PlayerEffects : NetworkBehaviour
         _audioSource.Play();
     }
 
+    public void UpdateHealthbar(int health)
+    {
+        _healthText.text = "Player Name\nHP: " + health.ToString();
+    }
+
+
     void Start()
     {
         _playerMovement = GetComponent<PlayerMovement>();
         _audioSource = GetComponent<AudioSource>();
+        _healthText = GetComponentInChildren<TextMeshProUGUI>();
     }
 
     void Update()
