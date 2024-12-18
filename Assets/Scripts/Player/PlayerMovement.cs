@@ -80,9 +80,9 @@ public class PlayerMovement : NetworkBehaviour
         _animator = GetComponent<Animator>();
     }
 
-    // this gets the points at the bottom left and bottom right of
-    // collider to raycast from when checking if on ground
-    // so collider can be adjusted without having to manually change anything else
+    // this gets offsets from position to points at the bottom left and bottom right of
+    // the collider to raycast from when checking if on ground,
+    // collider can be adjusted without having to manually change anything else
     private void GetFeetOffset()
     {
         _feetOffsetLeft.y = -(_collider2d.bounds.extents.y);
@@ -176,7 +176,7 @@ public class PlayerMovement : NetworkBehaviour
         _velocity.y -= (_jumping && _velocity.y >= 0 && !Input.GetKey(_keyJump)) ? _gravity*2 : _gravity;
         _velocity.y = Math.Max(_velocity.y, -_terminalVelocity);
 
-        // reset vel/jumping state/coyote time when on ground
+        // reset y vel/jumping state/coyote time when on ground
         if (_onGround)
         {
             _velocity.y = 0;
@@ -218,11 +218,8 @@ public class PlayerMovement : NetworkBehaviour
 
         Rigidbody2D.SlideResults slideResults = _rigidbody2d.Slide(_velocity, delta, _slideMovement);
 
-        // Velocity should respond to the results of Slide()
-        // E.g., if the player is holding left/right and pushing into a wall, their x vel should
-        // be set to 0 because they're not moving, rather than accumulating velocity up to max speed
-        // A more robust solution would be ideal but implementing them was being annoying
-        // this is ok for now
+        // Velocity should respond to the result of trying to move the player
+        // E.g., if the player is holding left/right and pushing into a wall, their x vel should be set to 0
         if (slideResults.position.x == transform.position.x)
             _velocity.x = 0;
 
@@ -242,7 +239,7 @@ public class PlayerMovement : NetworkBehaviour
     }
 
     // move the player along with a moving platform. This is a bad solution but the
-    // typical approach of parenting the platform to the player isn't easy to make work
+    // typical approach of parenting the platform to the player is annoying to make work
     // because of networking
     private void UpdatePosAdditionalVel()
     {

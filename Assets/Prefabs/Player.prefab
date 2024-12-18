@@ -214,7 +214,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 503fd34ced1462246a2d3432a17035bd, type: 3}
   - {fileID: 8300000, guid: 418bc56d1dc6a80439659b32e7362bca, type: 3}
   - {fileID: 8300000, guid: e5c6035b4d13fd14ca15e2f92a988542, type: 3}
-  _footstepDelay: 0.5
+  _footstepDelay: 0.2
 --- !u!50 &4894158572332116486
 Rigidbody2D:
   serializedVersion: 4

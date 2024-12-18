@@ -25,11 +25,10 @@ public class PlayerEffects : NetworkBehaviour
         {
             // PlayerMovement only runs movement code if it's the player belonging to this client
             // So for other players IsWalking() will always return false
-            // Each client will check if its player is walking every frame, and only update this scripts value
-            // over the network if it should change (instead of upating over network every frame)
+            // Each client will check if its player is walking every frame, and only update this scripts value over the network if it should actually change
             if (_playerMovement.IsWalking() != _isWalking)
             {
-                UpdateWalkingServerRpc(_playerMovement.IsWalking());
+                UpdateWalkingRpc(_playerMovement.IsWalking());
             }
         }
 
@@ -48,14 +47,8 @@ public class PlayerEffects : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
-    private void UpdateWalkingServerRpc(bool walking)
-    {
-        UpdateWalkingClientRpc(walking);
-    }
-
-    [ClientRpc]
-    private void UpdateWalkingClientRpc(bool walking)
+    [Rpc(SendTo.Everyone)]
+    private void UpdateWalkingRpc(bool walking)
     {
         _isWalking = walking;
     }

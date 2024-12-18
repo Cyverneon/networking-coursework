@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class Mover : MonoBehaviour
+public class Mover : NetworkBehaviour
 {
     [Tooltip("Whether to apply calculated movement, or just update it")]
     [SerializeField] bool _move = true;
