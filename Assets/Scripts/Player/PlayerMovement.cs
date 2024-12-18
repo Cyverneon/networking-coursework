@@ -80,6 +80,9 @@ public class PlayerMovement : NetworkBehaviour
         _animator = GetComponent<Animator>();
     }
 
+    // this gets the points at the bottom left and bottom right of
+    // collider to raycast from when checking if on ground
+    // so collider can be adjusted without having to manually change anything else
     private void GetFeetOffset()
     {
         _feetOffsetLeft.y = -(_collider2d.bounds.extents.y);
@@ -116,6 +119,7 @@ public class PlayerMovement : NetworkBehaviour
 
     private void CheckJumpInput()
     {
+        // you can cue up a jump a little before actually hitting the ground
         if (Input.GetKeyDown(_keyJump))
         {
             _cuedJump = true;
@@ -139,6 +143,11 @@ public class PlayerMovement : NetworkBehaviour
         //Debug.DrawRay(transform.position + feetOffsetRight, -Vector2.up, Color.red, 0.1f);
 
         return (hitLeft || hitRight);
+    }
+
+    public bool IsWalking()
+    {
+        return CheckOnGround() && (_velocity.x < -1f || _velocity.x > 1f);
     }
 
     private void CalculateVelocity(float delta)
@@ -167,6 +176,7 @@ public class PlayerMovement : NetworkBehaviour
         _velocity.y -= (_jumping && _velocity.y >= 0 && !Input.GetKey(_keyJump)) ? _gravity*2 : _gravity;
         _velocity.y = Math.Max(_velocity.y, -_terminalVelocity);
 
+        // reset vel/jumping state/coyote time when on ground
         if (_onGround)
         {
             _velocity.y = 0;
@@ -178,6 +188,8 @@ public class PlayerMovement : NetworkBehaviour
         {
             _coyoteTimer -= delta;
         }
+
+        // jump
         if (_cuedJump && (_onGround || _coyoteTimer >= 0))
         {
             _jumping = true;
@@ -185,6 +197,8 @@ public class PlayerMovement : NetworkBehaviour
             _appliedJumpApex = false;
             _velocity.y = _jumpHeight;
         }
+
+        // jump apex hover
         if (_jumping && _velocity.y <= 0)
         {
             if (!_appliedJumpApex)
@@ -204,12 +218,18 @@ public class PlayerMovement : NetworkBehaviour
 
         Rigidbody2D.SlideResults slideResults = _rigidbody2d.Slide(_velocity, delta, _slideMovement);
 
+        // Velocity should respond to the results of Slide()
+        // E.g., if the player is holding left/right and pushing into a wall, their x vel should
+        // be set to 0 because they're not moving, rather than accumulating velocity up to max speed
+        // A more robust solution would be ideal but implementing them was being annoying
+        // this is ok for now
         if (slideResults.position.x == transform.position.x)
             _velocity.x = 0;
 
         if (slideResults.position.y == transform.position.y)
             _velocity.y = 0;
 
+        // Jump apex hover is not desired if the player bonks their head into a ceiling so just act like we already finished applying it
         if (slideResults.slideHit.normal == -_upDirection)
         {
             _appliedJumpApex = true;
@@ -221,9 +241,11 @@ public class PlayerMovement : NetworkBehaviour
         UpdatePosAdditionalVel();
     }
 
+    // move the player along with a moving platform. This is a bad solution but the
+    // typical approach of parenting the platform to the player isn't easy to make work
+    // because of networking
     private void UpdatePosAdditionalVel()
     {
-        Debug.Log(_additionalVel);
         transform.position += new Vector3(_additionalVel.x, _additionalVel.y, transform.position.z) * Time.deltaTime;
 
     }
