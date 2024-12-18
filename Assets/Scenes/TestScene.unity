@@ -279,6 +279,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &320088604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 320088599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 501009991
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 0
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -3165,11 +3186,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1883645847}
   - component: {fileID: 1883645851}
+  - component: {fileID: 1883645854}
   - component: {fileID: 1883645848}
   - component: {fileID: 1883645846}
   - component: {fileID: 1883645852}
   - component: {fileID: 1883645853}
-  - component: {fileID: 1883645854}
   m_Layer: 6
   m_Name: MovingPlatform
   m_TagString: Untagged
@@ -3258,6 +3279,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf333538fb7d3c499bc99ba11ad1079, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _move: 1
   _speed: 180
   _radius: 1
   _orbitPos: {x: 9.01, y: 2.52, z: 0}
@@ -3448,6 +3470,9 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 710729414131554101, guid: 5ae17a661ad3deb40bc9cfcda6e719b9, type: 3}
+      insertIndex: 2
+      addedObject: {fileID: 320088604}
     - targetCorrespondingSourceObject: {fileID: 710729414131554101, guid: 5ae17a661ad3deb40bc9cfcda6e719b9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 320088603}

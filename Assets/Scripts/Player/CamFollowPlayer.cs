@@ -13,6 +13,7 @@ public class CamFollowPlayer : MonoBehaviour
     private Vector3 _targetPos;
     private Rect _constraints;
 
+    // Keep the camera within the bounds of the tilemap by using tilemap bounds and cam size
     private void getConstraints()
     {
         _constraints = new Rect(0, 0, 0, 0);
