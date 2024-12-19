@@ -11,7 +11,6 @@ public class NetworkUIHandler : MonoBehaviour
 {
     [Header("UI References")]
     [SerializeField] private TMP_InputField _ipInput;
-    [SerializeField] private TMP_InputField _portInput;
     [SerializeField] private Button _hostButton;
     [SerializeField] private Button _joinButton;
 
@@ -20,9 +19,6 @@ public class NetworkUIHandler : MonoBehaviour
         _ipInput.text = NetworkManager.Singleton.GetComponent<UnityTransport>().ConnectionData.Address;
         _ipInput.onValueChanged.AddListener(delegate { UpdateIP(); });
 
-        _portInput.text = (NetworkManager.Singleton.GetComponent<UnityTransport>().ConnectionData.Port).ToString();
-        _portInput.onValueChanged.AddListener(delegate { UpdatePort(); });
-
         _hostButton.onClick.AddListener(delegate { StartHost(); });
         _joinButton.onClick.AddListener(delegate { StartClient(); });
     }
@@ -30,12 +26,6 @@ public class NetworkUIHandler : MonoBehaviour
     void UpdateIP()
     {
         NetworkManager.Singleton.GetComponent<UnityTransport>().ConnectionData.Address = _ipInput.text;
-    }
-
-    void UpdatePort()
-    {
-        Debug.Log("still need to implement changing port to field value");
-        //NetworkManager.Singleton.GetComponent<UnityTransport>().ConnectionData.Port = newPort;
     }
 
     void StartClient()

@@ -15,16 +15,21 @@ public class PlayerEffects : NetworkBehaviour
 
     [Tooltip("Time in seconds between playing footstep")]
     [SerializeField] private float _footstepDelay;
-
-    private PlayerMovement _playerMovement;
-    private AudioSource _audioSource;
-    private TextMeshProUGUI _healthText;
-
-    private bool _isWalking;
-
     private float _footstepTimer = 0f;
 
-    private void CheckFootsteps()
+    [SerializeField] private float _invulnerableFlashingRate;
+    private float _invulnTimer = 0f;
+
+    private bool _isWalking;
+    private bool _isInvulnerable;
+
+    private Player _player;
+    private PlayerMovement _playerMovement;
+    private AudioSource _audioSource;
+    private SpriteRenderer _spriteRenderer;
+    private TextMeshProUGUI _healthText;
+
+    private void OwnerCheckStates()
     {
         if (IsOwner)
         {
@@ -35,8 +40,28 @@ public class PlayerEffects : NetworkBehaviour
             {
                 UpdateWalkingRpc(_playerMovement.IsWalking());
             }
-        }
 
+            if (_player.IsInvulnerable() != _isInvulnerable)
+            {
+                UpdateInvulnerableRpc(_player.IsInvulnerable());
+            }
+        }
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void UpdateWalkingRpc(bool walking)
+    {
+        _isWalking = walking;
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void UpdateInvulnerableRpc(bool invulnerable)
+    {
+        _isInvulnerable = invulnerable;
+    }
+
+    private void CheckFootsteps()
+    {
         if (_isWalking)
         {
             _footstepTimer -= Time.deltaTime;
@@ -52,10 +77,21 @@ public class PlayerEffects : NetworkBehaviour
         }
     }
 
-    [Rpc(SendTo.Everyone)]
-    private void UpdateWalkingRpc(bool walking)
+    private void CheckInvulnerable()
     {
-        _isWalking = walking;
+        if (_isInvulnerable)
+        {
+            _invulnTimer -= Time.deltaTime;
+            if (_invulnTimer <= 0f)
+            {
+                _spriteRenderer.enabled = !_spriteRenderer.enabled;
+                _invulnTimer = _invulnerableFlashingRate;
+            }
+        }
+        else
+        {
+            _spriteRenderer.enabled = true;
+        }
     }
 
     private void PlayClip(AudioClip clip)
@@ -64,7 +100,6 @@ public class PlayerEffects : NetworkBehaviour
         _audioSource.clip = clip;
         _audioSource.Play();
     }
-
 
     [Rpc(SendTo.Everyone)]
     public void UpdateHealthbarRpc(int health)
@@ -80,8 +115,10 @@ public class PlayerEffects : NetworkBehaviour
 
     private void GetComponentRefs()
     {
+        _player = GetComponent<Player>();
         _playerMovement = GetComponent<PlayerMovement>();
         _audioSource = GetComponent<AudioSource>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
         _healthText = GetComponentInChildren<TextMeshProUGUI>();
     }
 
@@ -92,6 +129,8 @@ public class PlayerEffects : NetworkBehaviour
 
     void Update()
     {
+        OwnerCheckStates();
         CheckFootsteps();
+        CheckInvulnerable();
     }
 }

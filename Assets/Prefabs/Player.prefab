@@ -179,6 +179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxHealth: 100
+  _hitInvulnerability: 0.8
 --- !u!114 &2122788115201123425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,7 +207,7 @@ MonoBehaviour:
   _collisionLayers:
     serializedVersion: 2
     m_Bits: 64
-  _knockbackDist: 10
+  _knockbackDist: 15
   _keyLeft: 97
   _keyRight: 100
   _keyJump: 32
@@ -230,6 +231,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e5c6035b4d13fd14ca15e2f92a988542, type: 3}
   _clipDamage: {fileID: 8300000, guid: f70ca0fc54ddedd44b27e413993777a9, type: 3}
   _footstepDelay: 0.2
+  _invulnerableFlashingRate: 0.08
 --- !u!50 &4894158572332116486
 Rigidbody2D:
   serializedVersion: 4

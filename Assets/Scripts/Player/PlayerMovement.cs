@@ -254,7 +254,7 @@ public class PlayerMovement : NetworkBehaviour
 
     // move the player along with a moving platform. This is a bad solution but the
     // typical approach of parenting the platform to the player is annoying to make work
-    // because of networking
+    // because of it all has to be synced over the network somehow
     private void UpdatePosAdditionalVel()
     {
         transform.position += new Vector3(_additionalVel.x, _additionalVel.y, transform.position.z) * Time.deltaTime;
