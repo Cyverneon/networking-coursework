@@ -18,10 +18,10 @@ public class CamFollowPlayer : MonoBehaviour
     {
         _constraints = new Rect(0, 0, 0, 0);
         Camera cam = GetComponent<Camera>();
-        _constraints.yMin = _tilemap.localBounds.min.y + cam.orthographicSize;
-        _constraints.yMax = _tilemap.localBounds.max.y - cam.orthographicSize;
-        _constraints.xMin = _tilemap.localBounds.min.x + (cam.orthographicSize * cam.aspect);
-        _constraints.xMax = _tilemap.localBounds.max.x - (cam.orthographicSize * cam.aspect);
+        _constraints.yMin = _tilemap.localBounds.min.y + cam.orthographicSize + 0.5f;
+        _constraints.yMax = _tilemap.localBounds.max.y - cam.orthographicSize - 0.5f;
+        _constraints.xMin = _tilemap.localBounds.min.x + (cam.orthographicSize * cam.aspect) + 0.5f;
+        _constraints.xMax = _tilemap.localBounds.max.x - (cam.orthographicSize * cam.aspect) - 0.5f;
     }
 
     // Start is called before the first frame update
