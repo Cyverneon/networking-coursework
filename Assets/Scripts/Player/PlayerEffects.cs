@@ -24,8 +24,8 @@ public class PlayerEffects : NetworkBehaviour
     [Tooltip("Material to use for the player sprite")]
     [SerializeField] Material _material;
 
-    private bool _isWalking;
-    private bool _isInvulnerable;
+    private bool _walking;
+    private bool _invulnerable;
 
     private Player _player;
     private PlayerMovement _playerMovement;
@@ -42,14 +42,14 @@ public class PlayerEffects : NetworkBehaviour
         if (IsOwner)
         {
             // PlayerMovement only runs movement code if it's the player belonging to this client
-            // So for other players IsWalking() will always return false
-            // Each client will check if its player is walking every frame, and only update this scripts value over the network if it should actually change
-            if (_playerMovement.IsWalking() != _isWalking)
+            // for players not owned by this client IsWalking() will always be false
+            // each client checks its own player and updates the value over the network if it's changed
+            if (_playerMovement.IsWalking() != _walking)
             {
                 UpdateWalkingRpc(_playerMovement.IsWalking());
             }
 
-            if (_player.IsInvulnerable() != _isInvulnerable)
+            if (_player.IsInvulnerable() != _invulnerable)
             {
                 UpdateInvulnerableRpc(_player.IsInvulnerable());
             }
@@ -59,18 +59,18 @@ public class PlayerEffects : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     private void UpdateWalkingRpc(bool walking)
     {
-        _isWalking = walking;
+        _walking = walking;
     }
 
     [Rpc(SendTo.Everyone)]
     private void UpdateInvulnerableRpc(bool invulnerable)
     {
-        _isInvulnerable = invulnerable;
+        _invulnerable = invulnerable;
     }
 
     private void CheckFootsteps()
     {
-        if (_isWalking)
+        if (_walking && !_invulnerable)
         {
             _footstepTimer -= Time.deltaTime;
             if (_footstepTimer <= 0f)
@@ -87,7 +87,7 @@ public class PlayerEffects : NetworkBehaviour
 
     private void CheckInvulnerable()
     {
-        if (_isInvulnerable)
+        if (_invulnerable)
         {
             _invulnTimer -= Time.deltaTime;
             if (_invulnTimer <= 0f)
