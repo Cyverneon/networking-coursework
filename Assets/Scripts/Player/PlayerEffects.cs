@@ -17,8 +17,12 @@ public class PlayerEffects : NetworkBehaviour
     [SerializeField] private float _footstepDelay;
     private float _footstepTimer = 0f;
 
+    [Tooltip("Rate that player will flash while invulnerable after getting hit")]
     [SerializeField] private float _invulnerableFlashingRate;
     private float _invulnTimer = 0f;
+
+    [Tooltip("Material to use for the player sprite")]
+    [SerializeField] Material _material;
 
     private bool _isWalking;
     private bool _isInvulnerable;
@@ -27,7 +31,11 @@ public class PlayerEffects : NetworkBehaviour
     private PlayerMovement _playerMovement;
     private AudioSource _audioSource;
     private SpriteRenderer _spriteRenderer;
+    private TextMeshProUGUI _nameText;
     private TextMeshProUGUI _healthText;
+
+    private string _playerName;
+    private Color _playerColor;
 
     private void OwnerCheckStates()
     {
@@ -102,9 +110,21 @@ public class PlayerEffects : NetworkBehaviour
     }
 
     [Rpc(SendTo.Everyone)]
+    public void UpdateNameRpc(string name)
+    {
+        _nameText.text = name;
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void UpdateSpriteMatColorRpc(Color color)
+    {
+        _spriteRenderer.material.color = color;
+    }
+
+    [Rpc(SendTo.Everyone)]
     public void UpdateHealthbarRpc(int health)
     {
-        _healthText.text = "Player Name\nHP: " + health.ToString();
+        _healthText.text = "HP: " + health.ToString();
     }
 
     [Rpc(SendTo.Everyone)]
@@ -119,7 +139,21 @@ public class PlayerEffects : NetworkBehaviour
         _playerMovement = GetComponent<PlayerMovement>();
         _audioSource = GetComponent<AudioSource>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _healthText = GetComponentInChildren<TextMeshProUGUI>();
+
+        _nameText = gameObject.transform.Find("Canvas/NameText").GetComponent<TextMeshProUGUI>();
+        _healthText = gameObject.transform.Find("Canvas/HPText").GetComponent<TextMeshProUGUI>();
+    }
+
+    [Rpc(SendTo.Owner)]
+    private void SetNameAndColorOwnerRpc()
+    {
+        UpdateNameRpc(PlayerInfoSingleton.instance.playerName);
+        UpdateSpriteMatColorRpc(PlayerInfoSingleton.instance.playerColor);
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        SetNameAndColorOwnerRpc();
     }
 
     private void Awake()

@@ -71,7 +71,6 @@ public class Player : NetworkBehaviour
         if (IsOwner)
         {
             CheckInvulnerableTimer();
-            Debug.Log("invuln: " + _hitInvulnerableTimer);
         }
     }
 }
