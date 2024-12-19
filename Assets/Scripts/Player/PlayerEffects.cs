@@ -62,17 +62,22 @@ public class PlayerEffects : NetworkBehaviour
         _audioSource.Play();
     }
 
-    public void UpdateHealthbar(int health)
+    [Rpc(SendTo.Everyone)]
+    public void UpdateHealthbarRpc(int health)
     {
         _healthText.text = "Player Name\nHP: " + health.ToString();
     }
 
-
-    void Start()
+    private void GetComponentRefs()
     {
         _playerMovement = GetComponent<PlayerMovement>();
         _audioSource = GetComponent<AudioSource>();
         _healthText = GetComponentInChildren<TextMeshProUGUI>();
+    }
+
+    private void Awake()
+    {
+        GetComponentRefs();
     }
 
     void Update()

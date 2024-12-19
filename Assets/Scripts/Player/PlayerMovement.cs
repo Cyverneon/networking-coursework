@@ -66,9 +66,13 @@ public class PlayerMovement : NetworkBehaviour
 
     public Vector2 _additionalVel = Vector2.zero;
 
-    public override void OnNetworkSpawn()
+    private void Awake()
     {
         GetComponentRefs();
+    }
+
+    public override void OnNetworkSpawn()
+    {
         GetFeetOffset();
         SetSlideMovement();
     }
