@@ -38,6 +38,8 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private Vector2 _upDirection = new Vector2(0, 1);
     [Tooltip("Layers which the player will collide with")]
     [SerializeField] private LayerMask _collisionLayers;
+    [Tooltip("Amount of knockback player recieves when colliding with a hazard")]
+    [SerializeField] private float _knockbackDist;
 
     [Header("Controls")]
     [SerializeField] private KeyCode _keyLeft = KeyCode.A;
@@ -64,7 +66,8 @@ public class PlayerMovement : NetworkBehaviour
     private bool _jumping = false;
     private bool _appliedJumpApex = false;
 
-    public Vector2 _additionalVel = Vector2.zero;
+    [HideInInspector] public Vector2 _additionalVel = Vector2.zero;
+    [HideInInspector] public Vector2 _cuedKnockback = Vector2.zero;
 
     private void Awake()
     {
@@ -159,7 +162,7 @@ public class PlayerMovement : NetworkBehaviour
         CheckOnGround();
         _onGround = CheckOnGround();
 
-        float acceleration = _onGround ? _accel*_speed*delta : _airAccel*_speed*delta;
+        float acceleration = _onGround ? _accel * _speed * delta : _airAccel * _speed * delta;
 
         if (Input.GetKey(_keyLeft) ^ Input.GetKey(_keyRight))
         {
@@ -177,7 +180,7 @@ public class PlayerMovement : NetworkBehaviour
             _velocity.x = Mathf.Lerp(_velocity.x, 0, acceleration);
         }
 
-        _velocity.y -= (_jumping && _velocity.y >= 0 && !Input.GetKey(_keyJump)) ? _gravity*2 : _gravity;
+        _velocity.y -= (_jumping && _velocity.y >= 0 && !Input.GetKey(_keyJump)) ? _gravity * 2 : _gravity;
         _velocity.y = Math.Max(_velocity.y, -_terminalVelocity);
 
         // reset y vel/jumping state/coyote time when on ground
@@ -186,7 +189,7 @@ public class PlayerMovement : NetworkBehaviour
             _velocity.y = 0;
             _jumping = false;
             _coyoteTimer = _coyoteTime;
-            
+
         }
         else if (_coyoteTimer >= 0)
         {
@@ -218,6 +221,13 @@ public class PlayerMovement : NetworkBehaviour
                     _velocity.y = 0;
                 }
             }
+        }
+
+        if (_cuedKnockback != Vector2.zero)
+        {
+            _velocity = _cuedKnockback * _knockbackDist;
+            _jumping = false;
+            _cuedKnockback = Vector2.zero;
         }
 
         Rigidbody2D.SlideResults slideResults = _rigidbody2d.Slide(_velocity, delta, _slideMovement);
@@ -267,4 +277,5 @@ public class PlayerMovement : NetworkBehaviour
             UpdateAnimatorParams();
         }
     }
+
 }

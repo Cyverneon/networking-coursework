@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject.GetComponent<Player>() != null)
         {
-            collision.gameObject.GetComponent<Player>().TakeDamage(_damage, (transform.position - collision.transform.position).normalized);
+            collision.gameObject.GetComponent<Player>().TakeDamage(_damage, (collision.transform.position - transform.position).normalized);
         }
     }
 }

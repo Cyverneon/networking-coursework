@@ -206,10 +206,12 @@ MonoBehaviour:
   _collisionLayers:
     serializedVersion: 2
     m_Bits: 64
+  _knockbackDist: 10
   _keyLeft: 97
   _keyRight: 100
   _keyJump: 32
   _additionalVel: {x: 0, y: 0}
+  _cuedKnockback: {x: 0, y: 0}
 --- !u!114 &8182439667959864421
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -222,10 +224,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4c111081e0f08f46af84abb3625549d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _footstepClips:
+  _clipFootsteps:
   - {fileID: 8300000, guid: 1ad0a4ad492a8e843b53239c7aa8a9b2, type: 3}
   - {fileID: 8300000, guid: 418bc56d1dc6a80439659b32e7362bca, type: 3}
   - {fileID: 8300000, guid: e5c6035b4d13fd14ca15e2f92a988542, type: 3}
+  _clipDamage: {fileID: 8300000, guid: f70ca0fc54ddedd44b27e413993777a9, type: 3}
   _footstepDelay: 0.2
 --- !u!50 &4894158572332116486
 Rigidbody2D:
@@ -344,7 +347,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 1d857a67dcbf8e0438762130a383e445, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.37891603, g: 0.6132076, b: 0.6111342, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 1

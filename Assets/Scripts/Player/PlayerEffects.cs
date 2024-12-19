@@ -7,8 +7,11 @@ using TMPro;
 
 public class PlayerEffects : NetworkBehaviour
 {
+    [Header("Audio clips")]
     [Tooltip("Audio clips that might be played as a footstep")]
-    [SerializeField] private AudioClip[] _footstepClips;
+    [SerializeField] private AudioClip[] _clipFootsteps;
+    [Tooltip("Audio clip to be played when damage is taken")]
+    [SerializeField] private AudioClip _clipDamage;
 
     [Tooltip("Time in seconds between playing footstep")]
     [SerializeField] private float _footstepDelay;
@@ -40,7 +43,7 @@ public class PlayerEffects : NetworkBehaviour
             if (_footstepTimer <= 0f)
             {
                 _footstepTimer = _footstepDelay;
-                PlayFootstep();
+                PlayClip(_clipFootsteps[Random.Range(0, _clipFootsteps.Length)]);
             }
         }
         else
@@ -55,17 +58,24 @@ public class PlayerEffects : NetworkBehaviour
         _isWalking = walking;
     }
 
-    private void PlayFootstep()
+    private void PlayClip(AudioClip clip)
     {
         _audioSource.Stop();
-        _audioSource.clip = _footstepClips[Random.Range(0, _footstepClips.Length)];
+        _audioSource.clip = clip;
         _audioSource.Play();
     }
+
 
     [Rpc(SendTo.Everyone)]
     public void UpdateHealthbarRpc(int health)
     {
         _healthText.text = "Player Name\nHP: " + health.ToString();
+    }
+
+    [Rpc(SendTo.Everyone)]
+    public void PlayDamageSoundRpc()
+    {
+        PlayClip(_clipDamage);
     }
 
     private void GetComponentRefs()

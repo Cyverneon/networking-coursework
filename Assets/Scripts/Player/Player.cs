@@ -12,11 +12,13 @@ public class Player : NetworkBehaviour
     private PlayerEffects _playerEffects;
     private PlayerMovement _playerMovement;
 
+
     public void TakeDamage(int damage, Vector2 direction)
     {
         if (IsOwner)
         {
             _health -= damage;
+            _playerMovement._cuedKnockback = direction;
             if (_health < 0)
             {
                 // die
@@ -24,6 +26,7 @@ public class Player : NetworkBehaviour
             else
             {
                 _playerEffects.UpdateHealthbarRpc(_health);
+                _playerEffects.PlayDamageSoundRpc();
             }
         }
     }
