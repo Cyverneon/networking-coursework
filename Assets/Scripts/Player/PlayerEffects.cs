@@ -12,6 +12,8 @@ public class PlayerEffects : NetworkBehaviour
     [SerializeField] private AudioClip[] _clipFootsteps;
     [Tooltip("Audio clip to be played when damage is taken")]
     [SerializeField] private AudioClip _clipDamage;
+    [Tooltip("Audio clip played when player dies")]
+    [SerializeField] private AudioClip _clipDeath;
 
     [Tooltip("Time in seconds between playing footstep")]
     [SerializeField] private float _footstepDelay;
@@ -31,6 +33,7 @@ public class PlayerEffects : NetworkBehaviour
     private PlayerMovement _playerMovement;
     private AudioSource _audioSource;
     private SpriteRenderer _spriteRenderer;
+    private Animator _animator;
     private TextMeshProUGUI _nameText;
     private TextMeshProUGUI _healthText;
 
@@ -122,9 +125,9 @@ public class PlayerEffects : NetworkBehaviour
     }
 
     [Rpc(SendTo.Everyone)]
-    public void UpdateHealthbarRpc(int health)
+    public void UpdateHealthbarRpc(int health, int maxhealth)
     {
-        _healthText.text = "HP: " + health.ToString();
+        _healthText.text = "HP: " + health.ToString() + "/" + maxhealth;
     }
 
     [Rpc(SendTo.Everyone)]
@@ -133,12 +136,26 @@ public class PlayerEffects : NetworkBehaviour
         PlayClip(_clipDamage);
     }
 
+    [Rpc(SendTo.Everyone)]
+    public void PlayDeathSoundRpc()
+    {
+        PlayClip(_clipDeath);
+    }
+
+    public void PlayDeathEffects()
+    {
+        // animation doesn't need to be synced in scipt because Network Animator will handle it
+        _animator.SetBool("playerDead", true);
+        PlayDeathSoundRpc();
+    }
+
     private void GetComponentRefs()
     {
         _player = GetComponent<Player>();
         _playerMovement = GetComponent<PlayerMovement>();
         _audioSource = GetComponent<AudioSource>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _animator = GetComponent<Animator>();
 
         _nameText = gameObject.transform.Find("Canvas/NameText").GetComponent<TextMeshProUGUI>();
         _healthText = gameObject.transform.Find("Canvas/HPText").GetComponent<TextMeshProUGUI>();
@@ -147,8 +164,8 @@ public class PlayerEffects : NetworkBehaviour
     [Rpc(SendTo.Owner)]
     private void SetNameAndColorOwnerRpc()
     {
-        UpdateNameRpc(PlayerInfoSingleton.instance.playerName);
-        UpdateSpriteMatColorRpc(PlayerInfoSingleton.instance.playerColor);
+        UpdateNameRpc(GameManager.instance._localPlayerName);
+        UpdateSpriteMatColorRpc(GameManager.instance._localPlayerColor);
     }
 
     public override void OnNetworkSpawn()

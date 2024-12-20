@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -17,23 +18,44 @@ public class Player : NetworkBehaviour
     [SerializeField] private float _hitInvulnerability = 0.2f;
     private float _hitInvulnerableTimer = 0f;
 
+    [Tooltip("Amount of time the player takes to die (to give anim/sound feedback rather than immediately dying")]
+    [SerializeField] private float _timeToDie = 0.3f;
+
+    private IEnumerator Die()
+    {
+        yield return new WaitForSeconds(_timeToDie);
+        GameManager.instance.PlayerDeath();
+        Destroy(this.gameObject);
+    }
+
     public void TakeDamage(int damage, Vector2 direction)
     {
         if (IsOwner && _hitInvulnerableTimer <= 0f)
         {
             _health -= damage;
-            _hitInvulnerableTimer = _hitInvulnerability;
-            _playerMovement._cuedKnockback = direction;
-            if (_health < 0)
+            if (_health <= 0)
             {
-                // die
+                _playerMovement.enabled = false;
+                GetComponent<Collider2D>().enabled = false;
+                _playerEffects.PlayDeathEffects();
+                DieServerRpc();
             }
             else
             {
-                _playerEffects.UpdateHealthbarRpc(_health);
+                _hitInvulnerableTimer = _hitInvulnerability;
+                _playerMovement._cuedKnockback = direction;
+                _playerEffects.UpdateHealthbarRpc(_health, _maxHealth);
                 _playerEffects.PlayDamageSoundRpc();
             }
         }
+    }
+
+    // Die() couroutine will destroy the network object
+    // this has to be done on the server
+    [Rpc(SendTo.Server)]
+    private void DieServerRpc()
+    {
+        StartCoroutine(Die());
     }
 
     private void CheckInvulnerableTimer()
@@ -58,7 +80,7 @@ public class Player : NetworkBehaviour
     [Rpc(SendTo.Owner)]
     private void UpdateHealthbarOwnerRpc()
     {
-        _playerEffects.UpdateHealthbarRpc(_health);
+        _playerEffects.UpdateHealthbarRpc(_health, _maxHealth);
     }
     public override void OnNetworkSpawn()
     {

@@ -77,12 +77,12 @@ public class NetworkUIHandler : MonoBehaviour
 
     private void UpdatePlayerName()
     {
-        PlayerInfoSingleton.instance.playerName = _nameInput.text;
+        GameManager.instance._localPlayerName = _nameInput.text;
     }
 
     private void UpdateColour(int i)
     {
-        PlayerInfoSingleton.instance.playerColor = _colourButtons[i].image.color;
+        GameManager.instance._localPlayerColor = _colourButtons[i].image.color;
         _colourSelectedImg.transform.SetParent(_colourButtons[i].transform, false);
     }
 
