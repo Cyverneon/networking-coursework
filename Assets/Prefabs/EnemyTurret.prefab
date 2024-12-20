@@ -10,13 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 6166938353602750037}
   - component: {fileID: 6935758588955151190}
-  - component: {fileID: 7129785722214879499}
-  - component: {fileID: 616574943646205742}
+  - component: {fileID: 4848428310337928659}
   - component: {fileID: 6890662617640778714}
-  - component: {fileID: 3471300815503941724}
-  - component: {fileID: 8412022310689166231}
+  - component: {fileID: 4298911956120254523}
   m_Layer: 0
-  m_Name: EnemyFly
+  m_Name: EnemyTurret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -49,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1544605649
+  GlobalObjectIdHash: 2896023903
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 0
@@ -58,7 +56,7 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &7129785722214879499
+--- !u!114 &4848428310337928659
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -67,28 +65,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 710729414131554101}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bba21f7a3abef044e9af5dbb2a6556a4, type: 3}
+  m_Script: {fileID: 11500000, guid: 6f7ccd1446d04284d905194c1d2f059e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 20
+  _damage: 30
   _destroyOnCollide: 0
---- !u!114 &616574943646205742
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 710729414131554101}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbf333538fb7d3c499bc99ba11ad1079, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _move: 1
-  _speed: 180
-  _radius: 1
-  _orbitPos: {x: 0, y: 0, z: 0}
-  _clockwise: 1
+  _projectileCooldown: 4
+  _maxShootDistance: 6
 --- !u!212 &6890662617640778714
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -132,7 +115,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -5913229624463224244, guid: fec4b96bb5cd92e478f7693a6a8aabf5, type: 3}
+  m_Sprite: {fileID: 8977595340813449921, guid: fec4b96bb5cd92e478f7693a6a8aabf5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -143,30 +126,8 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &3471300815503941724
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 710729414131554101}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 0b195ffcde9cf6a48b732248631bb8ba, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!58 &8412022310689166231
-CircleCollider2D:
+--- !u!61 &4298911956120254523
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -200,4 +161,14 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.51
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.53, y: 0.45}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.53, y: 0.45}
+  m_EdgeRadius: 0
