@@ -16,9 +16,9 @@ public class Flag : NetworkBehaviour
         _playerCounterText = gameObject.transform.Find("Canvas/PlayerCounterText").GetComponent<TextMeshProUGUI>();
     }
 
-    private void Start()
+    override public void OnNetworkSpawn()
     {
-        CheckTotalPlayers();
+        CheckTotalPlayersServerRpc();
     }
 
     [Rpc(SendTo.Server)]
@@ -34,14 +34,14 @@ public class Flag : NetworkBehaviour
         {
             NetworkManager.Singleton.SceneManager.LoadScene("WinMenu", LoadSceneMode.Single);
         }
-        UpdateCounterDisplayRpc(totalPlayers);
+        UpdateCounterDisplayRpc(_players, totalPlayers);
 
     }
 
     [Rpc(SendTo.Everyone)]
-    private void UpdateCounterDisplayRpc(int totalPlayers)
+    private void UpdateCounterDisplayRpc(int players, int totalPlayers)
     {
-        _playerCounterText.text = "Players: " + _players + "/" + totalPlayers;
+        _playerCounterText.text = "Players: " + players + "/" + totalPlayers;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

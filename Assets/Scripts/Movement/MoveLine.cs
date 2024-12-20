@@ -24,19 +24,20 @@ public class MoveLine : Mover
     [Rpc(SendTo.Server)]
     private void SyncPositionServerRpc()
     {
-        SyncPositionClientRpc(transform.position, _goingForward);
+        SyncPositionClientRpc(_timer, _goingForward);
     }
 
     [Rpc(SendTo.ClientsAndHost)]
-    private void SyncPositionClientRpc(Vector3 pos, bool goingForward)
+    private void SyncPositionClientRpc(float timer, bool goingForward)
     {
-        transform.position = pos;
+        _timer = timer;
         _goingForward = goingForward;
     }
 
     override protected Vector3 GetNextPos()
     {
         _timer += Time.deltaTime / _travelTime;
+        _timer = Mathf.Min(_timer, 1f);
 
         Vector3 nextPos;
         if (_goingForward)
