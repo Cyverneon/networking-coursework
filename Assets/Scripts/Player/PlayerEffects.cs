@@ -149,6 +149,13 @@ public class PlayerEffects : NetworkBehaviour
         PlayDeathSoundRpc();
     }
 
+    public void Respawn()
+    {
+        _animator.SetBool("playerDead", false);
+        _animator.Rebind();
+        _animator.Update(0f);
+    }
+
     private void GetComponentRefs()
     {
         _player = GetComponent<Player>();

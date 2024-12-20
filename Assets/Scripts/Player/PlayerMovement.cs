@@ -78,6 +78,7 @@ public class PlayerMovement : NetworkBehaviour
     {
         GetFeetOffset();
         SetSlideMovement();
+        Respawn();
     }
 
     private void GetComponentRefs()
@@ -111,7 +112,7 @@ public class PlayerMovement : NetworkBehaviour
         _slideMovement.selectedCollider = _collider2d;
         _slideMovement.layerMask = _collisionLayers;
         _slideMovement.useLayerMask = true;
-        _slideMovement.useStartPosition = false;
+        _slideMovement.useStartPosition = true;
         _slideMovement.useNoMove = true;
         _slideMovement.useSimulationMove = false;
         _slideMovement.useAttachedTriggers = false;
@@ -122,6 +123,13 @@ public class PlayerMovement : NetworkBehaviour
         _animator.SetBool("playerGrounded", CheckOnGround());
         _animator.SetFloat("velocityX", _velocity.x);
         _animator.SetFloat("velocityY", _velocity.y);
+    }
+
+    public void Respawn()
+    {
+        transform.position = Vector3.zero;
+        _velocity = Vector2.zero;
+        _additionalVel = Vector2.zero;
     }
 
     private void CheckJumpInput()
@@ -230,6 +238,8 @@ public class PlayerMovement : NetworkBehaviour
             _cuedKnockback = Vector2.zero;
         }
 
+        _slideMovement.startPosition = transform.position;
+
         Rigidbody2D.SlideResults slideResults = _rigidbody2d.Slide(_velocity, delta, _slideMovement);
 
         // Velocity should respond to the result of trying to move the player
@@ -253,8 +263,7 @@ public class PlayerMovement : NetworkBehaviour
     }
 
     // move the player along with a moving platform. This is a bad solution but the
-    // typical approach of parenting the platform to the player is annoying to make work
-    // because of it all has to be synced over the network somehow
+    // typical approach of parenting the platform to the player is annoying to make work with networking
     private void UpdatePosAdditionalVel()
     {
         transform.position += new Vector3(_additionalVel.x, _additionalVel.y, transform.position.z) * Time.deltaTime;

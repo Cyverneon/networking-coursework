@@ -18,14 +18,13 @@ public class Player : NetworkBehaviour
     [SerializeField] private float _hitInvulnerability = 0.2f;
     private float _hitInvulnerableTimer = 0f;
 
-    [Tooltip("Amount of time the player takes to die (to give anim/sound feedback rather than immediately dying")]
+    [Tooltip("Amount of time the player takes to die before respawning")]
     [SerializeField] private float _timeToDie = 0.3f;
 
-    private IEnumerator Die()
+    private IEnumerator RespawnTimer()
     {
         yield return new WaitForSeconds(_timeToDie);
-        GameManager.instance.PlayerDeath();
-        Destroy(this.gameObject);
+        Respawn();
     }
 
     public void TakeDamage(int damage, Vector2 direction)
@@ -35,10 +34,7 @@ public class Player : NetworkBehaviour
             _health -= damage;
             if (_health <= 0)
             {
-                _playerMovement.enabled = false;
-                GetComponent<Collider2D>().enabled = false;
-                _playerEffects.PlayDeathEffects();
-                DieServerRpc();
+                Die();
             }
             else
             {
@@ -50,12 +46,22 @@ public class Player : NetworkBehaviour
         }
     }
 
-    // Die() couroutine will destroy the network object
-    // this has to be done on the server
-    [Rpc(SendTo.Server)]
-    private void DieServerRpc()
+    private void Die()
     {
-        StartCoroutine(Die());
+        _playerMovement.enabled = false;
+        GetComponent<Collider2D>().enabled = false;
+        _playerEffects.PlayDeathEffects();
+        StartCoroutine(RespawnTimer());
+    }
+
+    private void Respawn()
+    {
+        _health = _maxHealth;
+        _playerMovement.enabled = true;
+        GetComponent<Collider2D>().enabled = true;
+        _playerMovement.Respawn();
+        _playerEffects.Respawn();
+        _playerEffects.UpdateHealthbarRpc(_health, _maxHealth);
     }
 
     private void CheckInvulnerableTimer()
