@@ -12,6 +12,8 @@ public class EnemyTurret : Enemy
     [Tooltip("Range that turret will shoot at player if they are within it")]
     [SerializeField] private float _maxShootDistance;
 
+    [SerializeField] private GameObject _bulletPrefab;
+
     private bool _canShoot = true;
 
     private IEnumerator Cooldown()
@@ -29,7 +31,7 @@ public class EnemyTurret : Enemy
             List<float> distances = new List<float>();
             foreach (Player player in players)
             {
-                distances.Add(Math.Abs((players[0].transform.position - transform.position).magnitude));
+                distances.Add(Math.Abs((player.transform.position - transform.position).magnitude));
             }
 
             int playerIndex = 0;
@@ -47,12 +49,15 @@ public class EnemyTurret : Enemy
             {
                 ShootProjectile(players[playerIndex].transform.position);
             }
+            StartCoroutine(Cooldown());
         }
     }
 
-    private void ShootProjectile(Vector2 targetPos)
+    private void ShootProjectile(Vector3 targetPos)
     {
-
+        GameObject projectile = Instantiate(_bulletPrefab, transform.position, Quaternion.identity);
+        projectile.GetComponent<NetworkObject>().Spawn(true);
+        projectile.GetComponent<Bullet>().SetDirectionRpc((targetPos - transform.position).normalized);
     }
 
     // Update is called once per frame

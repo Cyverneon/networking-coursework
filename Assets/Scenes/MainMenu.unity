@@ -2681,8 +2681,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1475233006}
-  - component: {fileID: 1475233005}
   - component: {fileID: 1475233007}
+  - component: {fileID: 1475233005}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -4196,7 +4196,7 @@ MonoBehaviour:
     PlayerPrefab: {fileID: 4400016751213276026, guid: a880e2f38f2a80847af1bb9940214874, type: 3}
     Prefabs:
       NetworkPrefabsLists:
-      - {fileID: 11400000, guid: 2545ae673ccbbc148b769abf094feafc, type: 2}
+      - {fileID: 11400000, guid: 9e154770fedb7c34881cfc5a24eebde4, type: 2}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
